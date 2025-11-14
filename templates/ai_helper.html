@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>AI Tech Support</h2>
+
+    <form method="post">
+        <textarea class="input-field" name="question" placeholder="Ask your question here..."></textarea>
+        <button class="btn btn-primary" type="submit">Ask WiseTech</button>
+    </form>
+
+    {% if answer %}
+    <h3>AI Response:</h3>
+    <p>{{ answer }}</p>
+    {% endif %}
+
+    <a class="link" href="{{ url_for('dashboard') }}">Back</a>
+</div>
+{% endblock %}

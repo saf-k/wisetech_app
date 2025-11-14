@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Scam Detection</h2>
+
+    <form method="post">
+        <textarea class="input-field" name="message_text" 
+                  placeholder="Paste suspicious message..."></textarea>
+
+        <button class="btn btn-primary" type="submit">Check Message</button>
+    </form>
+
+    {% if result %}
+    <h3>Risk Level: {{ result.label }}</h3>
+    <p>{{ result.explanation }}</p>
+    {% endif %}
+
+    <a class="link" href="{{ url_for('dashboard') }}">Back</a>
+</div>
+{% endblock %}
