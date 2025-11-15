@@ -3,9 +3,8 @@ import os
 import random
 from dotenv import load_dotenv
 import requests
-import json
 
-# Load environment variables
+# Load .env
 load_dotenv()
 
 app = Flask(__name__)
@@ -19,107 +18,85 @@ def generate_2fa_code():
     return "{:06d}".format(random.randint(0, 999999))
 
 
-def call_gemini_ai(prompt):
-    """AI helper using the updated Gemini REST API."""
+def call_gemini(prompt):
+    """Universal Gemini 2.5 Flash Caller (used by both AI helper + scam checker)."""
     try:
-        url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent"
+        url = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent"
+
         headers = {"Content-Type": "application/json"}
-        params = {"key": os.getenv("GOOGLE_API_KEY")}
+        params = {"key": os.getenv("GEMINI_API_KEY")}
 
         data = {
             "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": (
-                                "You are WiseTech, a patient helper for older adults. "
-                                "Explain simply, step-by-step:\n\n" + prompt
-                            )
-                        }
-                    ]
-                }
+                {"parts": [{"text": prompt}]}
             ]
         }
 
         response = requests.post(url, headers=headers, params=params, json=data)
         result = response.json()
 
+        # Error?
         if "error" in result:
-            print("\n❌ Gemini API Error:", result["error"])
-            return "AI helper is unavailable (Gemini error)."
+            print("\n❌ GEMINI ERROR:", result["error"])
+            return None
 
-        if "candidates" not in result:
-            print("\n❌ Missing 'candidates':", result)
-            return "AI helper could not generate a response."
+        # Missing candidates?
+        if "candidates" in result:
+            return result["candidates"][0]["content"]["parts"][0]["text"]
 
-        return result["candidates"][0]["content"]["parts"][0]["text"]
+        print("\n❌ NO CANDIDATES:", result)
+        return None
 
     except Exception as e:
-        print("Gemini REST Exception:", e)
-        return "AI helper is unavailable."
+        print("\n❌ GEMINI EXCEPTION:", e)
+        return None
 
 
+def call_gemini_ai(question):
+    """AI Helper → Short simplified answer."""
+    prompt = (
+        "You are WiseTech, a gentle tech helper for seniors.\n"
+        "Answer in **3 short, simple sentences maximum**.\n\n"
+        f"Question: {question}"
+    )
+
+    response = call_gemini(prompt)
+    return response or "AI helper is unavailable."
 
 
 def call_gemini_scam_checker(text):
-    """Scam detection using updated Gemini REST API."""
-    try:
-        url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent"
-        headers = {"Content-Type": "application/json"}
-        params = {"key": os.getenv("GOOGLE_API_KEY")}
+    """Scam Checker → Short structured answer."""
+    prompt = (
+        "You detect scams for seniors.\n"
+        "Respond EXACTLY in this format:\n"
+        "Risk: High/Medium/Low\n"
+        "Explanation: 1–2 very short sentences.\n\n"
+        f"Message:\n{text}"
+    )
 
-        data = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": (
-                                "You help seniors identify scams.\n"
-                                "Respond EXACTLY:\n"
-                                "Risk: High/Medium/Low\n"
-                                "Explanation: short and simple.\n\n"
-                                f"Message:\n{text}"
-                            )
-                        }
-                    ]
-                }
-            ]
-        }
+    response = call_gemini(prompt)
+    if not response:
+        return {"label": "Unknown", "explanation": "AI unavailable."}
 
-        response = requests.post(url, headers=headers, params=params, json=data)
-        result = response.json()
+    label = "Unknown"
+    explanation = response
 
-        if "error" in result:
-            print("\n❌ Gemini API Error:", result["error"])
-            return {"label": "Unknown", "explanation": "Gemini API error."}
+    for line in response.splitlines():
+        if line.lower().startswith("risk:"):
+            label = line.split(":", 1)[1].strip()
+        if line.lower().startswith("explanation:"):
+            explanation = line.split(":", 1)[1].strip()
 
-        if "candidates" not in result:
-            print("\n❌ Missing 'candidates':", result)
-            return {"label": "Unknown", "explanation": "Could not analyze message."}
-
-        output = result["candidates"][0]["content"]["parts"][0]["text"]
-
-        label = "Unknown"
-        explanation = output
-
-        for line in output.splitlines():
-            if line.lower().startswith("risk"):
-                label = line.split(":", 1)[1].strip()
-            if line.lower().startswith("explanation"):
-                explanation = line.split(":", 1)[1].strip()
-
-        return {"label": label, "explanation": explanation}
-
-    except Exception as e:
-        print("Gemini REST Exception:", e)
-        return {"label": "Unknown", "explanation": "Scam checker unavailable."}
-
+    return {"label": label, "explanation": explanation}
 
 
 # ------------------ ROUTES ------------------
 
 @app.route("/", methods=["GET", "POST"])
 def login():
+    # Reset login each time user loads /
+    session.clear()
+
     if request.method == "POST":
         user = request.form.get("username")
         pwd = request.form.get("password")
@@ -129,8 +106,6 @@ def login():
             return redirect(url_for("login"))
 
         session["username"] = user
-
-        # Generate 2FA
         code = generate_2fa_code()
         session["2fa"] = code
 
@@ -138,7 +113,6 @@ def login():
         print("  2FA CODE:", code)
         print("======================\n")
 
-        flash("A 2FA code was sent (check terminal).", "info")
         return redirect(url_for("verify"))
 
     return render_template("login.html")
@@ -151,14 +125,11 @@ def verify():
 
     if request.method == "POST":
         entered = request.form.get("code")
-        real = session.get("2fa")
-
-        if entered == real:
+        if entered == session.get("2fa"):
             session["authenticated"] = True
-            flash("Login successful!", "success")
             return redirect(url_for("dashboard"))
         else:
-            flash("Incorrect code. Try again.", "error")
+            flash("Incorrect code.", "error")
 
     return render_template("verify_2fa.html")
 
@@ -203,7 +174,6 @@ def scam_checker():
 @app.route("/logout")
 def logout():
     session.clear()
-    flash("Logged out.", "info")
     return redirect(url_for("login"))
 
 

@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card">
+
+<div class="card fade-in">
+    <img src="{{ url_for('static', filename='images/owl_logo.png') }}" class="logo">
+
     <h2>AI Tech Support</h2>
 
-    <form method="post">
-        <textarea class="input-field" name="question" placeholder="Ask your question here..."></textarea>
+    <form method="POST">
+        <textarea class="input-field" name="question" placeholder="Ask your question..." rows="5"></textarea>
         <button class="btn btn-primary" type="submit">Ask WiseTech</button>
     </form>
 
     {% if answer %}
-    <h3>AI Response:</h3>
+    <h3>Response:</h3>
     <p>{{ answer }}</p>
     {% endif %}
 
-    <a class="link" href="{{ url_for('dashboard') }}">Back</a>
+    <a class="nav-link" href="{{ url_for('dashboard') }}">Back</a>
 </div>
+
 {% endblock %}

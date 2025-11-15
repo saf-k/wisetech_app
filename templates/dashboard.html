@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card">
-    <h2>Welcome, {{ username }}</h2>
 
-    <a href="{{ url_for('ai_helper') }}">
-        <button class="btn btn-primary">Ask AI for Help</button>
-    </a>
+<div class="card fade-in">
+    <img src="{{ url_for('static', filename='images/owl_logo.png') }}" class="logo">
 
-    <a href="{{ url_for('scam_checker') }}">
-        <button class="btn btn-secondary">Scam Checker</button>
-    </a>
+    <h2>Welcome, {{ username }}!</h2>
 
-    <a class="link" href="{{ url_for('logout') }}">Logout</a>
+    <button class="btn btn-primary" onclick="window.location.href='/ai-helper'">
+        AI Tech Helper
+    </button>
+
+    <button class="btn btn-secondary" onclick="window.location.href='/scam-checker'">
+        Scam Detection
+    </button>
+
+    <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a>
 </div>
-{% endblock %}
 
+{% endblock %}

@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card">
-    <h1>WiseTech <span class="logo">🦉</span></h1>
 
-    <form method="post">
-        <input class="input-field" type="text" name="username" placeholder="Username">
-        <input class="input-field" type="password" name="password" placeholder="Password">
+<div class="card fade-in">
+    <img src="{{ url_for('static', filename='images/owl_logo.png') }}" class="logo">
+
+    <h2>WiseTech</h2>
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <input class="input-field" name="username" placeholder="Enter your username" required>
+        <input class="input-field" name="password" type="password" placeholder="Enter your password" required>
+
         <button class="btn btn-primary" type="submit">Log In</button>
     </form>
 
-    <a class="link" href="#">Need Help?</a>
+    <!-- Biometric button (does not submit form) -->
+    <button class="btn btn-secondary" type="button">Login with Face ID / Fingerprint</button>
+
+    <a class="nav-link" href="#">Need Help?</a>
 </div>
+
 {% endblock %}

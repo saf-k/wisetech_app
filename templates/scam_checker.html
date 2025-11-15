@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card">
+
+<div class="card fade-in">
+    <img src="{{ url_for('static', filename='images/owl_logo.png') }}" class="logo">
+
     <h2>Scam Detection</h2>
 
-    <form method="post">
-        <textarea class="input-field" name="message_text" 
-                  placeholder="Paste suspicious message..."></textarea>
-
-        <button class="btn btn-primary" type="submit">Check Message</button>
+    <form method="POST">
+        <textarea class="input-field" name="message_text" placeholder="Paste message here..." rows="5"></textarea>
+        <button class="btn btn-primary" type="submit">Scan</button>
     </form>
 
     {% if result %}
-    <h3>Risk Level: {{ result.label }}</h3>
-    <p>{{ result.explanation }}</p>
+        <h3>Risk: {{ result.label }}</h3>
+        <p>{{ result.explanation }}</p>
     {% endif %}
 
-    <a class="link" href="{{ url_for('dashboard') }}">Back</a>
+    <a class="nav-link" href="{{ url_for('dashboard') }}">Back</a>
 </div>
+
 {% endblock %}

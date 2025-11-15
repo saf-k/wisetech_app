@@ -1,44 +1,206 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>WiseTech</title>
-<style>
-body {
-    background:#0fa7ae;
-    font-family:Arial;
-    margin:0;
-    padding:0;
-}
-.container { max-width:450px; margin:auto; padding:20px; }
-.card { background:white; padding:20px; border-radius:16px; }
-.input-field { width:100%; padding:10px; border:1px solid teal; 
-    border-radius:10px; margin-bottom:10px; }
-.btn { width:100%; padding:12px; border:none; border-radius:12px; 
-    font-size:16px; cursor:pointer; }
-.btn-primary { background:teal; color:white; }
-.btn-secondary { background:#e4ddff; color:#123049; }
-.link { display:block; margin-top:10px; text-align:center; color:#c89cff; }
-.flash { padding:10px; margin-bottom:10px; border-radius:10px; }
-.flash-info { background:#e3f7ff; }
-.flash-error { background:#ffd5d5; }
-.flash-success { background:#d6ffdf; }
-.logo { float:right; font-size:30px; }
-</style>
+    <meta charset="UTF-8">
+    <title>WiseTech</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            --teal: #4ab5a5;
+            --lavender: #c9b7f3;
+            --dark-teal: #144d53;
+            --bg: #e7f7f6;
+        }
+
+        /* GLOBAL STYLES */
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            font-family: 'Nunito', sans-serif;
+            transition: font-size 0.3s ease, background 0.3s ease;
+        }
+
+        /* NAV BAR */
+        .navbar {
+            background: white;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-title {
+            font-size: 1.4rem;
+            color: var(--dark-teal);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 26px;
+            color: var(--dark-teal);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* PAGE CONTAINER */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        
+
+        /* CARD STYLING */
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        .logo {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        /* TEXT INPUTS */
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #cdd6d5;
+            font-size: 1rem;
+            margin-top: 10px;
+            transition: 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--teal);
+            outline: none;
+            box-shadow: 0 0 5px rgba(74,181,165,0.3);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1.15rem;
+            margin-top: 12px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--teal);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 10px rgba(74,181,165,0.4);
+        }
+
+        .btn-secondary {
+            background: var(--lavender);
+            color: #2d0f5f;
+        }
+
+        /* LINKS */
+        .nav-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #3e7b87;
+            transition: 0.2s ease;
+        }
+        .nav-link:hover {
+            color: var(--teal);
+        }
+
+        /* ALERTS */
+        .alert {
+            font-size: 1rem;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .alert-success { background: #d4f5dd; }
+        .alert-error { background: #ffd7d7; }
+        .alert-info { background: #d6ecff; }
+
+    </style>
 </head>
+
 <body>
-<div class="container">
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-  {% for category, message in messages %}
-    <div class="flash flash-{{category}}">{{message}}</div>
-  {% endfor %}
-{% endif %}
-{% endwith %}
+    <!-- NAV BAR -->
+    <div class="navbar">
+        <div class="nav-title">
+            <img src="{{ url_for('static', filename='images/owl_logo.png') }}" class="logo-small">
+            WiseTech
+        </div>
 
-{% block content %}{% endblock %}
+        <!-- Accessibility Button -->
+        <button class="icon-btn" onclick="toggleFontSize()">
+            <span class="material-icons">text_increase</span>
+        </button>
+    </div>
 
-</div>
+    <!-- PAGE CONTENT -->
+    <div class="container fade-in">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- ACCESSIBILITY SCRIPT -->
+    <script>
+        let bigFont = false;
+        function toggleFontSize() {
+            bigFont = !bigFont;
+            document.body.style.fontSize = bigFont ? "20px" : "16px";
+        }
+    </script>
+
 </body>
 </html>
