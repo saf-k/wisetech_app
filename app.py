@@ -11,12 +11,17 @@ app = Flask(__name__)
 app.secret_key = "changeme-secret-key"
 
 
-# ------------------ HELPERS ------------------
+# HELPERS
+
+# Copilot suggested a simple random.randint-based 2FA generator.
+# I kept the 6-digit formatting but rewrote spacing, naming, and docstring.
 
 def generate_2fa_code():
     """Generate a six-digit 2FA code."""
     return "{:06d}".format(random.randint(0, 999999))
 
+# REST API request format adapted from Google Gemini Quickstart documentation:
+# https://ai.google.dev/gemini-api/docs/quickstart
 
 def call_gemini(prompt):
     """Universal Gemini 2.5 Flash Caller (used by both AI helper + scam checker)."""
@@ -35,12 +40,12 @@ def call_gemini(prompt):
         response = requests.post(url, headers=headers, params=params, json=data)
         result = response.json()
 
-        # Error?
+        # Error
         if "error" in result:
             print("\n❌ GEMINI ERROR:", result["error"])
             return None
 
-        # Missing candidates?
+        # Missing candidates
         if "candidates" in result:
             return result["candidates"][0]["content"]["parts"][0]["text"]
 
@@ -51,6 +56,10 @@ def call_gemini(prompt):
         print("\n❌ GEMINI EXCEPTION:", e)
         return None
 
+
+# GitHub Copilot suggested a starter example of calling the Gemini API.
+# I rewrote the request structure, shortened the response for simplicity,
+# and added error handling, custom instructions, and accessibility-focused controls.
 
 def call_gemini_ai(question):
     """AI Helper → Short simplified answer."""
@@ -63,6 +72,8 @@ def call_gemini_ai(question):
     response = call_gemini(prompt)
     return response or "AI helper is unavailable."
 
+# Citation: Prompt and "generateContent" structure adapted from Google Gemini REST examples:
+# https://ai.google.dev/gemini-api/docs/api-overview
 
 def call_gemini_scam_checker(text):
     """Scam Checker → Short structured answer."""
@@ -90,8 +101,14 @@ def call_gemini_scam_checker(text):
     return {"label": label, "explanation": explanation}
 
 
-# ------------------ ROUTES ------------------
+# ROUTES 
 
+# Citation: Session handling and redirect patterns learned from Flask official docs:
+# https://flask.palletsprojects.com/en/3.0.x/quickstart/#sessions
+
+ # GPT suggested the initial structure for a login POST handler (checking username/password
+    # and redirecting). I rewrote the validation logic, session management, 
+    # and the 2FA generation to fit WiseTech's design.
 @app.route("/", methods=["GET", "POST"])
 def login():
     # Reset login each time user loads /
