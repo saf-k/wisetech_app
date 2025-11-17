@@ -200,6 +200,11 @@ def scam_checker():
 
     return render_template("scam_checker.html", text=text, result=result)
 
+@app.route("/help")
+def help_page():
+    if not session.get("authenticated"):
+        return redirect(url_for("login"))
+    return render_template("help.html")
 
 @app.route("/logout")
 def logout():

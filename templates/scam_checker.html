@@ -16,10 +16,14 @@
 
     {% if result %}
         <div class="scam-result">
-
             <!-- Accessible Risk Label -->
             <div class="scam-label {{ result.css_label }}">
                  {{ result.label }} Risk
+                 <!-- TTS Button -->
+                 <button class="icon-btn" style="float:right; margin-top:-5px;"
+                         onclick="speakText(`Risk: {{ result.label }}. {{ result.explanation }}`)">
+                     <span class="material-icons">volume_up</span>
+                 </button>
             </div>
 
             <p class="scam-explanation">

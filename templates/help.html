@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card fade-in">
+    <img src="{{ url_for('static', filename='images/owl_logo.png') }}" class="logo">
+
+    <h2>How to Use WiseTech</h2>
+    <p style="margin-bottom: 15px; color:#144d53;">
+        A simple walkthrough to help you feel comfortable using the app.
+    </p>
+
+    <h3 style="margin-top:20px;">1. Logging In</h3>
+    <p>
+        Enter your username and password.  
+        Then type the 6-digit code we send you.
+    </p>
+
+    <h3 style="margin-top:20px;">2. Accessibility Options</h3>
+    <p>
+        Tap the <b>A+</b> button in the top-right corner to make the text bigger.
+        Tap it again to return to normal size.
+    </p>
+
+    <h3 style="margin-top:20px;">3. AI Tech Helper</h3>
+    <p>
+        Go to “AI Tech Helper” to ask questions like  
+        <i>“How do I update my phone?”</i> or  
+        <i>“Why is my screen frozen?”</i>.
+    </p>
+
+    <h3 style="margin-top:20px;">4. Scam Detection</h3>
+    <p>
+        Paste any suspicious message and we’ll tell you if it looks risky.
+    </p>
+
+    <h3 style="margin-top:20px;">5. Logging Out</h3>
+    <p>
+        Tap “Log Out” at the bottom of the dashboard to securely exit.
+    </p>
+
+    <button class="btn btn-primary" onclick="window.location.href='/dashboard'">
+        Back to Dashboard
+    </button>
+</div>
+
+{% endblock %}
