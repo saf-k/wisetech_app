@@ -44,10 +44,10 @@ API request structures, templates, and routing were adapted from these sources a
    pip install -r requirements.txt
 
 2. Create a .env file with your API key:
-   GEMINI_API_KEY=your_key_here
+(echo "GEMINI_API_KEY=YOUR_KEY_HERE" > .env)
 
 3. Run the application:
-   flask run
+   python app.py or flask run
 
 ## Notes
 This application is a prototype for educational use. AI responses are intentionally simplified. The authentication and scam-analysis features are not intended for production or real-world security use.
