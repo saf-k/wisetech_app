@@ -12,9 +12,17 @@
     </form>
 
     {% if result %}
-        <h3>Risk: {{ result.label }}</h3>
-        <p>{{ result.explanation }}</p>
-    {% endif %}
+    <h3>Risk: {{ result.label }}</h3>
+
+    <!-- TTS Button -->
+    <button class="icon-btn" style="float:right; margin-top:-5px;"
+            onclick="speakText(`Risk: {{ result.label }}. {{ result.explanation }}`)">
+        <span class="material-icons">volume_up</span>
+    </button>
+
+    <p style="clear:both;">{{ result.explanation }}</p>
+{% endif %}
+
 
     <a class="nav-link" href="{{ url_for('dashboard') }}">Back</a>
 </div>

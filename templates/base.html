@@ -219,5 +219,20 @@
         }
     </script>
 
+
+<script>
+    function speakText(text) {
+        if (!text) return;
+
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.rate = 1;       // 1 = normal speed
+        msg.pitch = 1;      // normal pitch
+        msg.volume = 1;     // full volume
+
+        window.speechSynthesis.cancel(); // stop previous speech
+        window.speechSynthesis.speak(msg);
+    }
+</script>
+
 </body>
 </html>

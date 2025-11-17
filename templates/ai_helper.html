@@ -13,8 +13,16 @@
 
     {% if answer %}
     <h3>Response:</h3>
-    <p>{{ answer }}</p>
+    
+    <!-- TTS Button -->
+    <button class="icon-btn" style="float:right; margin-top:-5px;"
+            onclick="speakText(`{{ answer|safe }}`)">
+        <span class="material-icons">volume_up</span>
+    </button>
+    
+    <p style="clear:both;">{{ answer }}</p>
     {% endif %}
+    
 
     <a class="nav-link" href="{{ url_for('dashboard') }}">Back</a>
 </div>
