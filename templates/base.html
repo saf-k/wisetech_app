@@ -78,7 +78,6 @@
             padding: 20px;
         }
 
-        
 
         /* CARD STYLING 
            Copilot suggested rounded card styles, which I fully rewrote for:
@@ -120,10 +119,7 @@
             box-shadow: 0 0 5px rgba(74,181,165,0.3);
         }
 
-        /* BUTTONS 
-           Copilot suggested hover scaling. 
-           I changed the shadow + color palette.
-        */
+        /* BUTTONS */
         .btn {
             display: block;
             width: 100%;
@@ -178,6 +174,40 @@
         .alert-success { background: #d4f5dd; }
         .alert-error { background: #ffd7d7; }
         .alert-info { background: #d6ecff; }
+
+
+        /* ACCESSIBLE SCAM CHECKER COLORS */
+
+        .scam-label {
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        /* High = deep red */
+        .scam-label.high {
+            background: #b00020;
+            color: white;
+        }
+
+        /* Medium = dark amber */
+        .scam-label.medium {
+            background: #c27c00;
+            color: white;
+        }
+
+        /* Low = dark green */
+        .scam-label.low {
+            background: #00664f;
+            color: white;
+        }
+
+        .scam-explanation {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
 
     </style>
 </head>

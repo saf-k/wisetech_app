@@ -78,11 +78,16 @@ def call_gemini_ai(question):
 def call_gemini_scam_checker(text):
     """Scam Checker → Short structured answer."""
     prompt = (
-        "You detect scams for seniors.\n"
-        "Respond EXACTLY in this format:\n"
-        "Risk: High/Medium/Low\n"
-        "Explanation: 1–2 very short sentences.\n\n"
-        f"Message:\n{text}"
+      "You are a scam detection assistant for seniors.\n"
+    "You must ALWAYS assign a risk level that matches the message.\n\n"
+    "Rules:\n"
+    "- High Risk: message asks for money, codes, passwords, or personal info.\n"
+    "- Medium Risk: message seems suspicious, unknown sender, unusual links.\n"
+    "- Low Risk: normal everyday message with no scam indicators.\n\n"
+    "Your response MUST be ONLY:\n"
+    "Risk: High/Medium/Low\n"
+    "Explanation: 1–2 very short sentences.\n\n"
+    f"Message:\n{text}"
     )
 
     response = call_gemini(prompt)
@@ -94,11 +99,19 @@ def call_gemini_scam_checker(text):
 
     for line in response.splitlines():
         if line.lower().startswith("risk:"):
-            label = line.split(":", 1)[1].strip()
+            label = line.split(":", 1)[1].strip().lower()
         if line.lower().startswith("explanation:"):
             explanation = line.split(":", 1)[1].strip()
 
-    return {"label": label, "explanation": explanation}
+        # fallback if model misbehaves
+    if label not in ["high", "medium", "low"]:
+        label = "low"
+
+    return {
+        "label": label.capitalize(),   
+        "css_label": label,           
+        "explanation": explanation
+    }
 
 
 # ROUTES 
