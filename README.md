@@ -46,8 +46,13 @@ API request structures, templates, and routing were adapted from these sources a
 2. Create a .env file with your API key:
 (echo "GEMINI_API_KEY=YOUR_KEY_HERE" > .env)
 
+For CodeSpace: cp .env.example .env
+open file and paste API key 
+
 3. Run the application:
-   python app.py or flask run
+  flask run
+
+For CodeSpace: python app.py
 
 ## Notes
 This application is a prototype for educational use. AI responses are intentionally simplified. The authentication and scam-analysis features are not intended for production or real-world security use.
